@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  Alert,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import { Conversation } from '../types/chat';
@@ -9,6 +16,7 @@ interface SidebarProps {
   currentConversationId: string | null;
   onSelectConversation: (id: string) => void;
   onNewConversation: () => void;
+  onDeleteConversation: (id: string) => void;
   onClose: () => void;
 }
 
@@ -17,8 +25,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentConversationId,
   onSelectConversation,
   onNewConversation,
+  onDeleteConversation,
   onClose,
 }) => {
+  const handleDeleteConversation = (id: string) => {
+    if (window && window.confirm) {
+      const confirmed = window.confirm(
+        'Are you sure you want to delete this conversation?'
+      );
+      if (confirmed) {
+        onDeleteConversation(id);
+      }
+      return;
+    }
+    Alert.alert(
+      'Delete Conversation',
+      'Are you sure you want to delete this conversation?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => onDeleteConversation(id),
+          style: 'destructive',
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -44,10 +80,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ]}
             onPress={() => onSelectConversation(conversation.id)}
           >
-            <Ionicons name='chatbubble-outline' size={16} color={Colors.text} />
-            <Text style={styles.conversationTitle} numberOfLines={1}>
-              {conversation.title || 'New Conversation'}
-            </Text>
+            <View style={styles.conversationContent}>
+              <Ionicons
+                name='chatbubble-outline'
+                size={16}
+                color={Colors.text}
+              />
+              <Text style={styles.conversationTitle} numberOfLines={1}>
+                {conversation.title || 'New Conversation'}
+              </Text>
+            </View>
+            {conversation.id !== currentConversationId && (
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleDeleteConversation(conversation.id);
+                }}
+                style={styles.deleteButton}
+              >
+                <Ionicons name='trash-outline' size={16} color={Colors.text} />
+              </Pressable>
+            )}
           </Pressable>
         ))}
       </ScrollView>
@@ -103,6 +156,12 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
+    justifyContent: 'space-between',
+  },
+  conversationContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   activeConversation: {
     backgroundColor: Colors.background,
@@ -112,5 +171,9 @@ const styles = StyleSheet.create({
     fontSize: fontSize.regular,
     color: Colors.text,
     flex: 1,
+  },
+  deleteButton: {
+    padding: spacing.sm,
+    marginLeft: spacing.sm,
   },
 });

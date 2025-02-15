@@ -78,6 +78,20 @@ export default function ChatScreen() {
     return conversations.find((c) => c.id === currentConversationId);
   };
 
+  const deleteConversation = async (id: string) => {
+    const updatedConversations = conversations.filter((conv) => conv.id !== id);
+    setConversations(updatedConversations);
+    await saveConversations(updatedConversations);
+
+    if (id === currentConversationId) {
+      if (updatedConversations.length > 0) {
+        setCurrentConversationId(updatedConversations[0].id);
+      } else {
+        createNewConversation();
+      }
+    }
+  };
+
   const handleSend = async (text: string) => {
     if (!currentConversationId || !userId) return;
 
@@ -167,54 +181,57 @@ export default function ChatScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style='dark' />
-      <Header
-        onMenuPress={() => setIsSidebarOpen(true)}
-        title={currentConversation?.title || 'New Conversation'}
-      />
-
-      {isSidebarOpen && (
-        <Pressable
-          style={styles.overlay}
-          onPress={() => setIsSidebarOpen(false)}
+      <View style={styles.content}>
+        <Header
+          onMenuPress={() => setIsSidebarOpen(true)}
+          title={currentConversation?.title || 'New Conversation'}
         />
-      )}
 
-      <Animated.View
-        style={[
-          styles.sidebar,
-          {
-            transform: [{ translateX: slideAnim }],
-          },
-        ]}
-      >
-        <Sidebar
-          conversations={conversations}
-          currentConversationId={currentConversationId}
-          onSelectConversation={(id) => {
-            setCurrentConversationId(id);
-            setIsSidebarOpen(false);
-          }}
-          onNewConversation={createNewConversation}
-          onClose={() => setIsSidebarOpen(false)}
+        {isSidebarOpen && (
+          <Pressable
+            style={styles.overlay}
+            onPress={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        <Animated.View
+          style={[
+            styles.sidebar,
+            {
+              transform: [{ translateX: slideAnim }],
+            },
+          ]}
+        >
+          <Sidebar
+            conversations={conversations}
+            currentConversationId={currentConversationId}
+            onSelectConversation={(id) => {
+              setCurrentConversationId(id);
+              setIsSidebarOpen(false);
+            }}
+            onNewConversation={createNewConversation}
+            onDeleteConversation={deleteConversation}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        </Animated.View>
+
+        <FlatList
+          ref={flatListRef}
+          data={currentConversation?.messages || []}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ChatBubble message={item} />}
+          contentContainerStyle={styles.chatContainer}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         />
-      </Animated.View>
 
-      <FlatList
-        ref={flatListRef}
-        data={currentConversation?.messages || []}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ChatBubble message={item} />}
-        contentContainerStyle={styles.chatContainer}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-      />
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator color={Colors.primary} />
+          </View>
+        )}
 
-      {isLoading && (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator color={Colors.primary} />
-        </View>
-      )}
-
-      <ChatInput onSend={handleSend} />
+        <ChatInput onSend={handleSend} />
+      </View>
     </View>
   );
 }
@@ -223,6 +240,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  content: {
+    flex: 1,
+    marginTop: 0, // Removed the top margin/padding
   },
   overlay: {
     position: 'absolute',
