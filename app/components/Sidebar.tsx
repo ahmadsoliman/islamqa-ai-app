@@ -23,16 +23,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={onClose} style={styles.closeButton}>
-          <Ionicons name="close" size={24} color={Colors.text} />
+          <Ionicons name='close' size={24} color={Colors.text} />
         </Pressable>
         <Text style={styles.title}>IslamQA AI</Text>
       </View>
-      
-      <Pressable 
-        style={styles.newChatButton}
-        onPress={onNewConversation}
-      >
-        <Ionicons name="add-circle-outline" size={20} color={Colors.text} />
+
+      <Pressable style={styles.newChatButton} onPress={onNewConversation}>
+        <Ionicons name='add-circle-outline' size={20} color={Colors.text} />
         <Text style={styles.newChatText}>New conversation</Text>
       </Pressable>
 
@@ -42,11 +39,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             key={conversation.id}
             style={[
               styles.conversationItem,
-              conversation.id === currentConversationId && styles.activeConversation,
+              conversation.id === currentConversationId &&
+                styles.activeConversation,
             ]}
             onPress={() => onSelectConversation(conversation.id)}
           >
-            <Ionicons name="chatbubble-outline" size={16} color={Colors.text} />
+            <Ionicons name='chatbubble-outline' size={16} color={Colors.text} />
             <Text style={styles.conversationTitle} numberOfLines={1}>
               {conversation.title || 'New Conversation'}
             </Text>
@@ -59,8 +57,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
-    maxWidth: 300,
+    width: '85%',
+    maxWidth: 400,
     backgroundColor: Colors.secondaryBackground,
     height: '100%',
     borderRightWidth: 1,

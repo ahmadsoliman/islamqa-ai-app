@@ -1,74 +1,86 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator, Animated } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  Animated,
+  Pressable,
+} from 'react-native';
 import { ChatBubble } from './components/ChatBubble';
 import { ChatInput } from './components/ChatInput';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Colors } from './constants/Colors';
-import { Message, Conversation } from './types/chat';
+import { Message, Conversation, createInitialMessage } from './types/chat';
 import { sendMessage } from './services/api';
-import { saveConversations, loadConversations } from './utils/storage';
+import {
+  saveConversations,
+  loadConversations,
+  getUserId,
+} from './utils/storage';
 import { StatusBar } from 'expo-status-bar';
 
 export default function ChatScreen() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationId] = useState<
+    string | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
-  const slideAnim = useRef(new Animated.Value(-300)).current;
+  const slideAnim = useRef(new Animated.Value(-400)).current;
 
   useEffect(() => {
-    loadConversations().then((loaded) => {
-      setConversations(loaded);
-      if (loaded.length > 0) {
-        setCurrentConversationId(loaded[0].id);
-      } else {
-        createNewConversation();
-      }
-    });
+    const init = async () => {
+      const [loadedConversations, loadedUserId] = await Promise.all([
+        loadConversations(),
+        getUserId(),
+      ]);
+      setUserId(loadedUserId);
+      setConversations(loadedConversations);
+      createNewConversation();
+    };
+    init();
   }, []);
 
   useEffect(() => {
     Animated.timing(slideAnim, {
-      toValue: isSidebarOpen ? 0 : -300,
+      toValue: isSidebarOpen ? 0 : -400,
       duration: 300,
       useNativeDriver: true,
     }).start();
   }, [isSidebarOpen]);
 
   const createNewConversation = () => {
-    const newConversation: Conversation = {
-      id: Date.now().toString(),
-      title: 'New Conversation',
-      messages: [],
-      lastUpdated: new Date(),
-    };
-    setConversations(prev => [newConversation, ...prev]);
-    setCurrentConversationId(newConversation.id);
-    setIsSidebarOpen(false);
-    saveConversations([newConversation, ...conversations]);
+    setConversations((prevConvs) => {
+      setIsSidebarOpen(false);
+
+      if (prevConvs.length > 0 && !prevConvs[0].isTouched) {
+        setCurrentConversationId(prevConvs[0].id);
+        return prevConvs;
+      }
+      const newConversation: Conversation = {
+        id: Math.random().toString(36).substring(2) + Date.now().toString(36),
+        title: 'New Conversation',
+        messages: [createInitialMessage()],
+        lastUpdated: new Date(),
+        isTouched: false,
+      };
+      saveConversations([newConversation, ...prevConvs]);
+      setCurrentConversationId(newConversation.id);
+      return [newConversation, ...prevConvs];
+    });
   };
 
   const getCurrentConversation = () => {
-    return conversations.find(c => c.id === currentConversationId);
-  };
-
-  const updateConversationTitle = (messages: Message[]) => {
-    if (messages.length === 2) { // After first exchange
-      const userMessage = messages[0].text;
-      const title = userMessage.slice(0, 30) + (userMessage.length > 30 ? '...' : '');
-      setConversations(prev =>
-        prev.map(conv =>
-          conv.id === currentConversationId
-            ? { ...conv, title }
-            : conv
-        )
-      );
-    }
+    return conversations.find((c) => c.id === currentConversationId);
   };
 
   const handleSend = async (text: string) => {
+    if (!currentConversationId || !userId) return;
+
     const userMessage: Message = {
       id: Date.now().toString(),
       text,
@@ -76,24 +88,32 @@ export default function ChatScreen() {
       timestamp: new Date(),
     };
 
-    const updatedMessages = [...(getCurrentConversation()?.messages || []), userMessage];
-    
-    setConversations(prev =>
-      prev.map(conv =>
-        conv.id === currentConversationId
-          ? {
-              ...conv,
-              messages: updatedMessages,
-              lastUpdated: new Date(),
-            }
-          : conv
-      )
+    const conversationTitle =
+      text.slice(0, 30) + (text.length > 30 ? '...' : '');
+
+    const updatedMessages = [
+      ...(getCurrentConversation()?.messages || []),
+      userMessage,
+    ];
+
+    const updatedConversations = conversations.map((conv) =>
+      conv.id === currentConversationId
+        ? {
+            ...conv,
+            title: updatedMessages.length < 3 ? conversationTitle : conv.title,
+            messages: updatedMessages,
+            isTouched: true,
+            lastUpdated: new Date(),
+          }
+        : conv
     );
+    setConversations(updatedConversations);
+    await saveConversations(updatedConversations);
 
     setIsLoading(true);
 
     try {
-      const response = await sendMessage(text);
+      const response = await sendMessage(text, currentConversationId, userId);
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: response.message || 'Sorry, I could not process your request.',
@@ -102,21 +122,20 @@ export default function ChatScreen() {
       };
 
       const finalMessages = [...updatedMessages, botMessage];
-      
-      setConversations(prev =>
-        prev.map(conv =>
-          conv.id === currentConversationId
-            ? {
-                ...conv,
-                messages: finalMessages,
-                lastUpdated: new Date(),
-              }
-            : conv
-        )
+
+      const finalConversations = updatedConversations.map((conv) =>
+        conv.id === currentConversationId
+          ? {
+              ...conv,
+              messages: finalMessages,
+              isTouched: true,
+              lastUpdated: new Date(),
+            }
+          : conv
       );
 
-      updateConversationTitle(finalMessages);
-      await saveConversations(conversations);
+      setConversations(finalConversations);
+      await saveConversations(finalConversations);
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -124,18 +143,20 @@ export default function ChatScreen() {
         sender: 'bot',
         timestamp: new Date(),
       };
-      
-      setConversations(prev =>
-        prev.map(conv =>
-          conv.id === currentConversationId
-            ? {
-                ...conv,
-                messages: [...updatedMessages, errorMessage],
-                lastUpdated: new Date(),
-              }
-            : conv
-        )
+
+      const errorConversations = conversations.map((conv) =>
+        conv.id === currentConversationId
+          ? {
+              ...conv,
+              messages: [...updatedMessages, errorMessage],
+              isTouched: true,
+              lastUpdated: new Date(),
+            }
+          : conv
       );
+
+      setConversations(errorConversations);
+      await saveConversations(errorConversations);
     } finally {
       setIsLoading(false);
     }
@@ -145,18 +166,27 @@ export default function ChatScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
+      <StatusBar style='dark' />
       <Header
         onMenuPress={() => setIsSidebarOpen(true)}
         title={currentConversation?.title || 'New Conversation'}
       />
-      
-      <Animated.View style={[
-        styles.sidebar,
-        {
-          transform: [{ translateX: slideAnim }],
-        },
-      ]}>
+
+      {isSidebarOpen && (
+        <Pressable
+          style={styles.overlay}
+          onPress={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <Animated.View
+        style={[
+          styles.sidebar,
+          {
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
+      >
         <Sidebar
           conversations={conversations}
           currentConversationId={currentConversationId}
@@ -172,18 +202,18 @@ export default function ChatScreen() {
       <FlatList
         ref={flatListRef}
         data={currentConversation?.messages || []}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ChatBubble message={item} />}
         contentContainerStyle={styles.chatContainer}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
       />
-      
+
       {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={Colors.primary} />
         </View>
       )}
-      
+
       <ChatInput onSend={handleSend} />
     </View>
   );
@@ -193,6 +223,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 50,
   },
   sidebar: {
     position: 'absolute',
