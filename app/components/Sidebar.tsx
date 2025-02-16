@@ -13,6 +13,8 @@ import { Colors, fontSize, spacing } from '../constants/Colors';
 import { Conversation } from '../types/chat';
 import { AnimatedView } from './AnimatedView';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { getTextDirectionStyle } from '../utils/styles';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -21,6 +23,7 @@ interface SidebarProps {
   onNewConversation: () => void;
   onDeleteConversation: (id: string) => void;
   onClose: () => void;
+  onLanguageChange: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -30,6 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNewConversation,
   onDeleteConversation,
   onClose,
+  onLanguageChange,
 }) => {
   const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,6 +43,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   );
 
   const handleDeleteConversation = (id: string) => {
+    if (window && window.confirm) {
+      if (window.confirm(t('deleteConfirm'))) {
+        onDeleteConversation(id);
+      }
+      return;
+    }
     Alert.alert(t('deleteConversation'), t('deleteConfirm'), [
       {
         text: t('cancel'),
@@ -53,31 +63,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <AnimatedView style={styles.container}>
+    <AnimatedView
+      style={[
+        styles.container,
+        { right: i18n.dir() === 'rtl' ? 0 : undefined },
+      ]}
+    >
       <View
         style={[
           styles.header,
-          { flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+          { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
         ]}
       >
         <Pressable onPress={onClose} style={styles.closeButton}>
           <Ionicons name='close' size={24} color={Colors.text} />
         </Pressable>
-        <Text style={styles.title}>{t('islamqaAI')}</Text>
+        <Text style={[styles.title, getTextDirectionStyle(i18n)]}>
+          {t('islamqaAI')}
+        </Text>
       </View>
 
-      <Pressable style={styles.newChatButton} onPress={onNewConversation}>
+      <Pressable
+        style={[
+          styles.newChatButton,
+          { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
+        ]}
+        onPress={onNewConversation}
+      >
         <Ionicons name='add-circle-outline' size={20} color={Colors.text} />
-        <Text style={styles.newChatText}>{t('newConversation')}</Text>
+        <Text style={[styles.newChatText, getTextDirectionStyle(i18n)]}>
+          {t('newConversation')}
+        </Text>
       </Pressable>
 
       <TextInput
-        style={styles.searchInput}
+        style={[styles.searchInput, getTextDirectionStyle(i18n)]}
         value={searchQuery}
         onChangeText={setSearchQuery}
         placeholder={t('searchConversations')}
         placeholderTextColor={Colors.text + '80'}
-        textAlign={i18n.language === 'ar' ? 'right' : 'left'}
       />
 
       <ScrollView style={styles.conversationList}>
@@ -88,6 +112,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               styles.conversationItem,
               conversation.id === currentConversationId &&
                 styles.activeConversation,
+              {
+                flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row',
+              },
             ]}
             onPress={() => onSelectConversation(conversation.id)}
           >
@@ -95,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               style={[
                 styles.conversationContent,
                 {
-                  flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row',
+                  flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row',
                 },
               ]}
             >
@@ -105,10 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 color={Colors.text}
               />
               <Text
-                style={[
-                  styles.conversationTitle,
-                  { textAlign: i18n.language === 'ar' ? 'right' : 'left' },
-                ]}
+                style={[styles.conversationTitle, getTextDirectionStyle(i18n)]}
                 numberOfLines={1}
               >
                 {conversation.title || t('newConversation')}
@@ -128,6 +152,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </Pressable>
         ))}
       </ScrollView>
+
+      <View style={styles.footer}>
+        <LanguageSwitcher onLanguageChange={onLanguageChange} />
+      </View>
     </AnimatedView>
   );
 };
@@ -138,6 +166,9 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRightWidth: 1,
     borderRightColor: Colors.border,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 1,
   },
   header: {
     alignItems: 'center',
@@ -155,7 +186,6 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.md,
   },
   newChatButton: {
-    flexDirection: 'row',
     alignItems: 'center',
     padding: spacing.md,
     borderWidth: 1,
@@ -203,5 +233,11 @@ const styles = StyleSheet.create({
   deleteButton: {
     padding: spacing.sm,
     marginHorizontal: spacing.sm,
+  },
+  footer: {
+    padding: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    alignItems: 'center',
   },
 });

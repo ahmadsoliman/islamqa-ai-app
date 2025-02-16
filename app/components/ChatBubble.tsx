@@ -7,6 +7,7 @@ import { Share } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
+import { getTextDirectionStyle } from '../utils/styles';
 
 interface ChatBubbleProps {
   message: Message;
@@ -14,7 +15,7 @@ interface ChatBubbleProps {
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
   const isUser = message.sender === 'user';
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleLongPress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -64,11 +65,25 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
           isUser ? styles.userContainer : styles.botContainer,
         ]}
       >
-        <Text style={[styles.text, isUser ? styles.userText : styles.botText]}>
+        <Text
+          style={[
+            styles.text,
+            getTextDirectionStyle(i18n),
+            isUser ? styles.userText : styles.botText,
+          ]}
+        >
           {message.text}
         </Text>
-        <Text style={styles.timestamp}>
-          {message.timestamp.toLocaleTimeString([], {
+        <Text
+          style={[
+            styles.timestamp,
+            {
+              textAlign: i18n.dir() === 'rtl' ? 'left' : 'right',
+              direction: i18n.dir(),
+            },
+          ]}
+        >
+          {message.timestamp.toLocaleTimeString(i18n.language, {
             hour: '2-digit',
             minute: '2-digit',
           })}
@@ -111,6 +126,5 @@ const styles = StyleSheet.create({
     color: Colors.text,
     opacity: 0.6,
     marginTop: spacing.xs,
-    textAlign: 'right',
   },
 });

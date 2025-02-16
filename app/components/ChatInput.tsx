@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Colors, spacing } from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { getTextDirectionStyle } from '../utils/styles';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -10,7 +11,7 @@ interface ChatInputProps {
 
 export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   const [message, setMessage] = useState('');
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const handleSend = () => {
     if (message.trim()) {
@@ -20,16 +21,27 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
+      ]}
+    >
       <TextInput
-        style={styles.input}
+        style={[styles.input, getTextDirectionStyle(i18n)]}
         value={message}
         onChangeText={setMessage}
         placeholder={t('promptPlaceholder')}
         placeholderTextColor={Colors.text + '80'}
         multiline
       />
-      <Pressable onPress={handleSend} style={styles.sendButton}>
+      <Pressable
+        onPress={handleSend}
+        style={[
+          styles.sendButton,
+          i18n.dir() === 'rtl' ? styles.flipHorizontally : {},
+        ]}
+      >
         <Ionicons name='send' size={24} color={Colors.primary} />
       </Pressable>
     </View>
@@ -38,7 +50,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     padding: spacing.md,
     backgroundColor: Colors.secondaryBackground,
     borderTopWidth: 1,
@@ -56,5 +67,8 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     padding: spacing.sm,
+  },
+  flipHorizontally: {
+    transform: [{ scaleX: -1 }],
   },
 });

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { getTextDirectionStyle } from '../utils/styles';
 
 interface HeaderProps {
   onMenuPress: () => void;
@@ -17,22 +17,18 @@ export const Header: React.FC<HeaderProps> = ({ onMenuPress, title }) => {
     <View
       style={[
         styles.container,
-        { flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+        { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
       ]}
     >
       <Pressable onPress={onMenuPress} style={styles.menuButton}>
         <Ionicons name='menu' size={24} color={Colors.text} />
       </Pressable>
       <Text
-        style={[
-          styles.title,
-          { textAlign: i18n.language === 'ar' ? 'right' : 'left' },
-        ]}
+        style={[styles.title, , getTextDirectionStyle(i18n)]}
         numberOfLines={1}
       >
         {title}
       </Text>
-      <LanguageSwitcher />
     </View>
   );
 };

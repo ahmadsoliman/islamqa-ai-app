@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Animated,
   Pressable,
+  Dimensions,
 } from 'react-native';
 import { ChatBubble } from './components/ChatBubble';
 import { ChatInput } from './components/ChatInput';
@@ -22,6 +23,8 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 
+const SIDEBAR_WIDTH = 400;
+
 export default function ChatScreen() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<
@@ -31,8 +34,12 @@ export default function ChatScreen() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
-  const slideAnim = useRef(new Animated.Value(-400)).current;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const slideAnim = useRef(
+    new Animated.Value(
+      i18n.dir() === 'rtl' ? Dimensions.get('window').width : -SIDEBAR_WIDTH
+    )
+  ).current;
 
   useEffect(() => {
     const init = async () => {
@@ -47,18 +54,27 @@ export default function ChatScreen() {
     init();
   }, []);
 
-  useEffect(() => {
+  const placeSideBar = () => {
     Animated.timing(slideAnim, {
-      toValue: isSidebarOpen ? 0 : -400,
+      toValue: isSidebarOpen
+        ? i18n.dir() === 'rtl'
+          ? Dimensions.get('window').width - SIDEBAR_WIDTH
+          : 0
+        : i18n.dir() === 'rtl'
+        ? Dimensions.get('window').width
+        : -SIDEBAR_WIDTH,
       duration: 200,
       useNativeDriver: true,
     }).start();
+  };
+
+  useEffect(() => {
+    placeSideBar();
   }, [isSidebarOpen]);
 
   const createNewConversation = () => {
+    setIsSidebarOpen(false);
     setConversations((prevConvs) => {
-      setIsSidebarOpen(false);
-
       if (prevConvs.length > 0 && !prevConvs[0].isTouched) {
         setCurrentConversationId(prevConvs[0].id);
         return prevConvs;
@@ -214,6 +230,7 @@ export default function ChatScreen() {
             onNewConversation={createNewConversation}
             onDeleteConversation={deleteConversation}
             onClose={() => setIsSidebarOpen(false)}
+            onLanguageChange={() => setTimeout(placeSideBar, 0)}
           />
         </Animated.View>
 
@@ -263,7 +280,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 100,
     width: '85%',
-    maxWidth: 400,
+    maxWidth: SIDEBAR_WIDTH,
     height: '100%',
   },
   chatContainer: {

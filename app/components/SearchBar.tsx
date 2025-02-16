@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { TextInput, StyleSheet, Animated, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, spacing } from '../constants/Colors';
+import { useTranslation } from 'react-i18next';
+import { getTextDirectionStyle } from '../utils/styles';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -10,6 +12,7 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
   const [fadeAnim] = useState(new Animated.Value(0));
+  const { i18n } = useTranslation();
 
   const handleSearch = () => {
     onSearch(query);
@@ -23,7 +26,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, getTextDirectionStyle(i18n)]}
         value={query}
         onChangeText={setQuery}
         placeholder='Search messages...'

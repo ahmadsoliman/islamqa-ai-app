@@ -1,19 +1,26 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { I18nManager, Pressable, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors, fontSize, spacing } from '../constants/Colors';
+import { getTextDirectionStyle } from '../utils/styles';
 
-export const LanguageSwitcher: React.FC = () => {
+export const LanguageSwitcher: React.FC<{ onLanguageChange: () => void }> = ({
+  onLanguageChange,
+}) => {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
+    onLanguageChange();
     const newLang = i18n.language === 'ar' ? 'en' : 'ar';
     i18n.changeLanguage(newLang);
+
+    I18nManager.allowRTL(i18n.dir() === 'rtl');
+    I18nManager.forceRTL(i18n.dir() === 'rtl');
   };
 
   return (
     <Pressable onPress={toggleLanguage} style={styles.container}>
-      <Text style={styles.text}>
+      <Text style={[styles.text, getTextDirectionStyle(i18n)]}>
         {i18n.language === 'ar' ? 'English' : 'العربية'}
       </Text>
     </Pressable>
