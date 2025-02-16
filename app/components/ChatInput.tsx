@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Colors, spacing } from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -9,6 +10,7 @@ interface ChatInputProps {
 
 export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   const [message, setMessage] = useState('');
+  const { t } = useTranslation();
 
   const handleSend = () => {
     if (message.trim()) {
@@ -23,12 +25,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
         style={styles.input}
         value={message}
         onChangeText={setMessage}
-        placeholder="Type your question..."
+        placeholder={t('promptPlaceholder')}
         placeholderTextColor={Colors.text + '80'}
         multiline
       />
       <Pressable onPress={handleSend} style={styles.sendButton}>
-        <Ionicons name="send" size={24} color={Colors.primary} />
+        <Ionicons name='send' size={24} color={Colors.primary} />
       </Pressable>
     </View>
   );

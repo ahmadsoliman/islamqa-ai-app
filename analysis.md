@@ -108,9 +108,10 @@ export default memo(ChatBubble);
 ## Next Steps
 
 1. Implement RTL support, including a language switcher, translations of all texts in English and Arabic, Arabic and RTL is the default UI
-2. Add typing indicators
-3. Implement copy functionality
-4. Add AdMob integration
-5. Create settings menu
+2. Add AdMob integration
+3. Create settings menu
+
+4. Add typing indicators
+5. Implement copy functionality
 6. Implement search functionality
 7. Add animations and transitions

@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import { Conversation } from '../types/chat';
 import { AnimatedView } from './AnimatedView';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -30,6 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onDeleteConversation,
   onClose,
 }) => {
+  const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredConversations = conversations.filter((conversation) =>
@@ -37,43 +39,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
   );
 
   const handleDeleteConversation = (id: string) => {
-    Alert.alert(
-      'Delete Conversation',
-      'Are you sure you want to delete this conversation?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () => onDeleteConversation(id),
-          style: 'destructive',
-        },
-      ]
-    );
+    Alert.alert(t('deleteConversation'), t('deleteConfirm'), [
+      {
+        text: t('cancel'),
+        style: 'cancel',
+      },
+      {
+        text: t('delete'),
+        onPress: () => onDeleteConversation(id),
+        style: 'destructive',
+      },
+    ]);
   };
 
   return (
     <AnimatedView style={styles.container}>
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          { flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+        ]}
+      >
         <Pressable onPress={onClose} style={styles.closeButton}>
           <Ionicons name='close' size={24} color={Colors.text} />
         </Pressable>
-        <Text style={styles.title}>IslamQA AI</Text>
+        <Text style={styles.title}>{t('islamqaAI')}</Text>
       </View>
 
       <Pressable style={styles.newChatButton} onPress={onNewConversation}>
         <Ionicons name='add-circle-outline' size={20} color={Colors.text} />
-        <Text style={styles.newChatText}>New conversation</Text>
+        <Text style={styles.newChatText}>{t('newConversation')}</Text>
       </Pressable>
 
       <TextInput
         style={styles.searchInput}
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder='Search conversations...'
+        placeholder={t('searchConversations')}
         placeholderTextColor={Colors.text + '80'}
+        textAlign={i18n.language === 'ar' ? 'right' : 'left'}
       />
 
       <ScrollView style={styles.conversationList}>
@@ -87,14 +91,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ]}
             onPress={() => onSelectConversation(conversation.id)}
           >
-            <View style={styles.conversationContent}>
+            <View
+              style={[
+                styles.conversationContent,
+                {
+                  flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row',
+                },
+              ]}
+            >
               <Ionicons
                 name='chatbubble-outline'
                 size={16}
                 color={Colors.text}
               />
-              <Text style={styles.conversationTitle} numberOfLines={1}>
-                {conversation.title || 'New Conversation'}
+              <Text
+                style={[
+                  styles.conversationTitle,
+                  { textAlign: i18n.language === 'ar' ? 'right' : 'left' },
+                ]}
+                numberOfLines={1}
+              >
+                {conversation.title || t('newConversation')}
               </Text>
             </View>
             {conversation.id !== currentConversationId && (
@@ -117,15 +134,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '85%',
-    maxWidth: 400,
     backgroundColor: Colors.secondaryBackground,
     height: '100%',
     borderRightWidth: 1,
     borderRightColor: Colors.border,
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
     padding: spacing.md,
     borderBottomWidth: 1,
@@ -138,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.large,
     fontWeight: 'bold',
     color: Colors.text,
-    marginLeft: spacing.md,
+    marginHorizontal: spacing.md,
   },
   newChatButton: {
     flexDirection: 'row',
@@ -150,7 +164,7 @@ const styles = StyleSheet.create({
     margin: spacing.md,
   },
   newChatText: {
-    marginLeft: spacing.sm,
+    marginHorizontal: spacing.sm,
     fontSize: fontSize.medium,
     color: Colors.text,
   },
@@ -174,7 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   conversationContent: {
-    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
@@ -182,13 +195,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   conversationTitle: {
-    marginLeft: spacing.sm,
+    marginHorizontal: spacing.sm,
     fontSize: fontSize.regular,
     color: Colors.text,
     flex: 1,
   },
   deleteButton: {
     padding: spacing.sm,
-    marginLeft: spacing.sm,
+    marginHorizontal: spacing.sm,
   },
 });

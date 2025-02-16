@@ -20,6 +20,7 @@ import {
   getUserId,
 } from './utils/storage';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 
 export default function ChatScreen() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -31,6 +32,7 @@ export default function ChatScreen() {
   const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const slideAnim = useRef(new Animated.Value(-400)).current;
+  const { t } = useTranslation();
 
   useEffect(() => {
     const init = async () => {
@@ -48,7 +50,7 @@ export default function ChatScreen() {
   useEffect(() => {
     Animated.timing(slideAnim, {
       toValue: isSidebarOpen ? 0 : -400,
-      duration: 300,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   }, [isSidebarOpen]);
@@ -63,7 +65,7 @@ export default function ChatScreen() {
       }
       const newConversation: Conversation = {
         id: Math.random().toString(36).substring(2) + Date.now().toString(36),
-        title: 'New Conversation',
+        title: t('newConversation'),
         messages: [createInitialMessage()],
         lastUpdated: new Date(),
         isTouched: false,
@@ -130,7 +132,7 @@ export default function ChatScreen() {
       const response = await sendMessage(text, currentConversationId, userId);
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: response.message || 'Sorry, I could not process your request.',
+        text: response.message || t('apiErrorMessage'),
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -153,7 +155,7 @@ export default function ChatScreen() {
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, something went wrong. Please try again.',
+        text: t('apiErrorMessage'),
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -184,7 +186,7 @@ export default function ChatScreen() {
       <View style={styles.content}>
         <Header
           onMenuPress={() => setIsSidebarOpen(true)}
-          title={currentConversation?.title || 'New Conversation'}
+          title={currentConversation?.title || t('newConversation')}
         />
 
         {isSidebarOpen && (
@@ -260,6 +262,9 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     zIndex: 100,
+    width: '85%',
+    maxWidth: 400,
+    height: '100%',
   },
   chatContainer: {
     padding: 16,

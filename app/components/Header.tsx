@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HeaderProps {
   onMenuPress: () => void;
@@ -9,23 +11,38 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onMenuPress, title }) => {
+  const { i18n } = useTranslation();
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+      ]}
+    >
       <Pressable onPress={onMenuPress} style={styles.menuButton}>
-        <Ionicons name="menu" size={24} color={Colors.text} />
+        <Ionicons name='menu' size={24} color={Colors.text} />
       </Pressable>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text
+        style={[
+          styles.title,
+          { textAlign: i18n.language === 'ar' ? 'right' : 'left' },
+        ]}
+        numberOfLines={1}
+      >
         {title}
       </Text>
+      <LanguageSwitcher />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
     padding: spacing.md,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xs,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
     backgroundColor: Colors.secondaryBackground,
@@ -37,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.medium,
     fontWeight: '500',
     color: Colors.text,
-    marginLeft: spacing.sm,
+    marginHorizontal: spacing.sm,
     flex: 1,
   },
 });
