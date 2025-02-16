@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import * as Haptics from 'expo-haptics';
 import { Message } from '../types/chat';
 import { Share } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import Toast from 'react-native-toast-message';
 
 interface ChatBubbleProps {
   message: Message;
@@ -14,6 +16,39 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
 
   const handleLongPress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Alert.alert(
+      'Message Options',
+      message?.text?.length > 100
+        ? message?.text?.substring(0, 200) + '...'
+        : message?.text || '',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Copy',
+          onPress: handleCopy,
+        },
+        {
+          text: 'Share',
+          onPress: handleShare,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(message.text);
+    Toast.show({
+      type: 'success',
+      text1: 'Copied to clipboard',
+      visibilityTime: 2000,
+    });
+  };
+
+  const handleShare = async () => {
     await Share.share({
       message: message.text,
     });

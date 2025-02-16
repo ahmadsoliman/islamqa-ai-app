@@ -4,14 +4,10 @@ export const Colors = {
   text: '#242424',
   secondaryBackground: '#ffffff',
   border: 'rgba(74, 124, 18, 0.2)',
-};
-
-export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
+  error: '#ff4444',
+  success: '#00C851',
+  warning: '#ffbb33',
+  info: '#33b5e5',
 };
 
 export const fontSize = {
@@ -20,4 +16,12 @@ export const fontSize = {
   medium: 16,
   large: 18,
   xlarge: 24,
+};
+
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
 };

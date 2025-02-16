@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,12 @@ import {
   ScrollView,
   Pressable,
   Alert,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import { Conversation } from '../types/chat';
+import { AnimatedView } from './AnimatedView';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -28,16 +30,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onDeleteConversation,
   onClose,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredConversations = conversations.filter((conversation) =>
+    conversation.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleDeleteConversation = (id: string) => {
-    if (window && window.confirm) {
-      const confirmed = window.confirm(
-        'Are you sure you want to delete this conversation?'
-      );
-      if (confirmed) {
-        onDeleteConversation(id);
-      }
-      return;
-    }
     Alert.alert(
       'Delete Conversation',
       'Are you sure you want to delete this conversation?',
@@ -56,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <AnimatedView style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={onClose} style={styles.closeButton}>
           <Ionicons name='close' size={24} color={Colors.text} />
@@ -69,8 +68,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <Text style={styles.newChatText}>New conversation</Text>
       </Pressable>
 
+      <TextInput
+        style={styles.searchInput}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder='Search conversations...'
+        placeholderTextColor={Colors.text + '80'}
+      />
+
       <ScrollView style={styles.conversationList}>
-        {conversations.map((conversation) => (
+        {filteredConversations.map((conversation) => (
           <Pressable
             key={conversation.id}
             style={[
@@ -104,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </Pressable>
         ))}
       </ScrollView>
-    </View>
+    </AnimatedView>
   );
 };
 
@@ -145,6 +152,14 @@ const styles = StyleSheet.create({
   newChatText: {
     marginLeft: spacing.sm,
     fontSize: fontSize.medium,
+    color: Colors.text,
+  },
+  searchInput: {
+    backgroundColor: Colors.background,
+    borderRadius: spacing.sm,
+    padding: spacing.sm,
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.md,
     color: Colors.text,
   },
   conversationList: {
