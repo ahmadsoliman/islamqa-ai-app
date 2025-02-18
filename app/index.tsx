@@ -7,23 +7,24 @@ import {
   Animated,
   Pressable,
   Dimensions,
+  Platform,
 } from 'react-native';
-import { ChatBubble } from './components/ChatBubble';
-import { ChatInput } from './components/ChatInput';
-import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
-import { Colors } from './constants/Colors';
-import { Message, Conversation, createInitialMessage } from './types/chat';
-import { sendMessage } from './services/api';
+import { ChatBubble } from '../components/ChatBubble';
+import { ChatInput } from '../components/ChatInput';
+import { Header } from '../components/Header';
+import { Sidebar } from '../components/Sidebar';
+import { Colors } from '../constants/Colors';
+import { Message, Conversation, createInitialMessage } from '../types/chat';
+import { sendMessage } from '../services/api';
 import {
   saveConversations,
   loadConversations,
   getUserId,
-} from './utils/storage';
+} from '../utils/storage';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 
-const SIDEBAR_WIDTH = 400;
+const SIDEBAR_WIDTH = 350;
 
 export default function ChatScreen() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -35,6 +36,7 @@ export default function ChatScreen() {
   const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const { t, i18n } = useTranslation();
+
   const slideAnim = useRef(
     new Animated.Value(
       i18n.dir() === 'rtl' ? Dimensions.get('window').width : -SIDEBAR_WIDTH
@@ -57,7 +59,7 @@ export default function ChatScreen() {
   const placeSideBar = () => {
     Animated.timing(slideAnim, {
       toValue: isSidebarOpen
-        ? i18n.dir() === 'rtl'
+        ? i18n.dir() === 'rtl' && Platform.OS === 'web'
           ? Dimensions.get('window').width - SIDEBAR_WIDTH
           : 0
         : i18n.dir() === 'rtl'
@@ -81,7 +83,7 @@ export default function ChatScreen() {
       }
       const newConversation: Conversation = {
         id: Math.random().toString(36).substring(2) + Date.now().toString(36),
-        title: t('newConversation'),
+        title: null,
         messages: [createInitialMessage()],
         lastUpdated: new Date(),
         isTouched: false,
@@ -230,7 +232,9 @@ export default function ChatScreen() {
             onNewConversation={createNewConversation}
             onDeleteConversation={deleteConversation}
             onClose={() => setIsSidebarOpen(false)}
-            onLanguageChange={() => setTimeout(placeSideBar, 0)}
+            onLanguageChange={() =>
+              setTimeout(() => setIsSidebarOpen(false), 100)
+            }
           />
         </Animated.View>
 

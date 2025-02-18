@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router';
-import { useTranslation } from 'react-i18next';
-import { I18nextProvider } from 'react-i18next';
+import { useTranslation, I18nextProvider } from 'react-i18next';
 import { I18nManager } from 'react-native';
+
+import { AdBanner } from '../components/AdBanner';
+import { usePurchases } from '../services/purchases';
 
 export default function RootLayout() {
   const { i18n } = useTranslation();
+  const { isPro } = usePurchases();
 
   I18nManager.allowRTL(i18n.dir() === 'rtl');
   I18nManager.forceRTL(i18n.dir() === 'rtl');
@@ -17,6 +20,7 @@ export default function RootLayout() {
           headerBackButtonMenuEnabled: false,
         }}
       />
+      {!isPro && <AdBanner />}
     </I18nextProvider>
   );
 }

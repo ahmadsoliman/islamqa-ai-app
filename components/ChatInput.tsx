@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
-import { Colors, spacing } from '../constants/Colors';
+import { Colors, spacing, fontSize } from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { getTextDirectionStyle } from '../utils/styles';
+import {
+  getFlexDirectionStyle,
+  getTextInputDirectionStyle,
+} from '../utils/styles';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -21,14 +24,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
-      ]}
-    >
+    <View style={[styles.container, getFlexDirectionStyle(i18n)]}>
       <TextInput
-        style={[styles.input, getTextDirectionStyle(i18n)]}
+        style={[styles.input, getTextInputDirectionStyle(i18n)]}
         value={message}
         onChangeText={setMessage}
         placeholder={t('promptPlaceholder')}
@@ -42,7 +40,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
           i18n.dir() === 'rtl' ? styles.flipHorizontally : {},
         ]}
       >
-        <Ionicons name='send' size={24} color={Colors.primary} />
+        <Ionicons name='send' size={20} color={Colors.secondaryBackground} />
       </Pressable>
     </View>
   );
@@ -50,23 +48,25 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: spacing.md,
-    backgroundColor: Colors.secondaryBackground,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    padding: spacing.xs,
+    // paddingVertical: 0,
+    backgroundColor: Colors.background,
     alignItems: 'center',
+    columnGap: spacing.sm,
   },
   input: {
     flex: 1,
-    backgroundColor: Colors.background,
-    borderRadius: spacing.md,
-    padding: spacing.sm,
-    marginRight: spacing.sm,
+    backgroundColor: Colors.secondaryBackground,
+    borderRadius: spacing.xl,
+    padding: spacing.sm * 1.5,
     color: Colors.text,
-    maxHeight: 100,
+    maxHeight: 200,
+    fontSize: fontSize.medium,
   },
   sendButton: {
-    padding: spacing.sm,
+    backgroundColor: Colors.primary,
+    borderRadius: spacing.xl,
+    padding: spacing.sm * 1.5,
   },
   flipHorizontally: {
     transform: [{ scaleX: -1 }],

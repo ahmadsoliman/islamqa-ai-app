@@ -9,13 +9,22 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.anonymous.IslamQA"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "com.android.vending.BILLING",
+        "com.android.vending.BILLING"
+      ],
+      "package": "com.anonymous.IslamQA"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +41,16 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-4707665982612066~6315458491",
+          "iosAppId": "ca-app-pub-4707665982612066~4730914085"
+        }
+      ],
+      [
+        "expo-dev-client"
       ]
     ],
     "experiments": {

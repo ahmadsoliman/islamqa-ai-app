@@ -7,7 +7,7 @@ export interface Message {
 
 export interface Conversation {
   id: string;
-  title: string;
+  title: string | null;
   messages: Message[];
   lastUpdated: Date;
   isTouched: boolean;

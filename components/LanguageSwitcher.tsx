@@ -10,12 +10,12 @@ export const LanguageSwitcher: React.FC<{ onLanguageChange: () => void }> = ({
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
-    onLanguageChange();
     const newLang = i18n.language === 'ar' ? 'en' : 'ar';
     i18n.changeLanguage(newLang);
 
     I18nManager.allowRTL(i18n.dir() === 'rtl');
     I18nManager.forceRTL(i18n.dir() === 'rtl');
+    onLanguageChange();
   };
 
   return (

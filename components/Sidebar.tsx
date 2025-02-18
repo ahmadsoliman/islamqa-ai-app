@@ -14,7 +14,12 @@ import { Conversation } from '../types/chat';
 import { AnimatedView } from './AnimatedView';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { getTextDirectionStyle } from '../utils/styles';
+import {
+  getFlexDirectionStyle,
+  getTextDirectionStyle,
+  getTextInputDirectionStyle,
+} from '../utils/styles';
+import { SearchBar } from './SearchBar';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -66,15 +71,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <AnimatedView
       style={[
         styles.container,
-        { right: i18n.dir() === 'rtl' ? 0 : undefined },
+        i18n.dir() === 'rtl'
+          ? {
+              borderLeftWidth: 1,
+            }
+          : {
+              borderRightWidth: 1,
+            },
       ]}
     >
-      <View
-        style={[
-          styles.header,
-          { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
-        ]}
-      >
+      <View style={[styles.header, getFlexDirectionStyle(i18n)]}>
         <Pressable onPress={onClose} style={styles.closeButton}>
           <Ionicons name='close' size={24} color={Colors.text} />
         </Pressable>
@@ -84,10 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </View>
 
       <Pressable
-        style={[
-          styles.newChatButton,
-          { flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row' },
-        ]}
+        style={[styles.newChatButton, getFlexDirectionStyle(i18n)]}
         onPress={onNewConversation}
       >
         <Ionicons name='add-circle-outline' size={20} color={Colors.text} />
@@ -96,13 +99,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Text>
       </Pressable>
 
-      <TextInput
-        style={[styles.searchInput, getTextDirectionStyle(i18n)]}
+      <SearchBar onSearch={setSearchQuery} />
+      {/* <TextInput
+        style={[styles.searchInput, getTextInputDirectionStyle(i18n)]}
         value={searchQuery}
         onChangeText={setSearchQuery}
         placeholder={t('searchConversations')}
         placeholderTextColor={Colors.text + '80'}
-      />
+      /> */}
 
       <ScrollView style={styles.conversationList}>
         {filteredConversations.map((conversation) => (
@@ -112,19 +116,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               styles.conversationItem,
               conversation.id === currentConversationId &&
                 styles.activeConversation,
-              {
-                flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row',
-              },
+              getFlexDirectionStyle(i18n),
             ]}
             onPress={() => onSelectConversation(conversation.id)}
           >
             <View
-              style={[
-                styles.conversationContent,
-                {
-                  flexDirection: i18n.dir() === 'rtl' ? 'row-reverse' : 'row',
-                },
-              ]}
+              style={[styles.conversationContent, getFlexDirectionStyle(i18n)]}
             >
               <Ionicons
                 name='chatbubble-outline'
@@ -164,15 +161,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.secondaryBackground,
     height: '100%',
-    borderRightWidth: 1,
-    borderRightColor: Colors.border,
+    borderColor: Colors.border,
+
     position: 'absolute',
     width: '100%',
     zIndex: 1,
   },
   header: {
     alignItems: 'center',
-    padding: spacing.md,
+    padding: spacing.sm,
+    paddingTop: spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
@@ -183,7 +181,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.large,
     fontWeight: 'bold',
     color: Colors.text,
-    marginHorizontal: spacing.md,
   },
   newChatButton: {
     alignItems: 'center',
@@ -232,10 +229,10 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: spacing.sm,
-    marginHorizontal: spacing.sm,
   },
   footer: {
-    padding: spacing.md,
+    padding: spacing.sm,
+    paddingLeft: spacing.md,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
     alignItems: 'center',
