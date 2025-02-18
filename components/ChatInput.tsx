@@ -10,9 +10,10 @@ import {
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  isLoading?: boolean;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
   const [message, setMessage] = useState('');
   const { i18n, t } = useTranslation();
 
@@ -34,13 +35,20 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
         multiline
       />
       <Pressable
+        disabled={isLoading}
         onPress={handleSend}
         style={[
           styles.sendButton,
+          isLoading ? { backgroundColor: Colors.border } : {},
           i18n.dir() === 'rtl' ? styles.flipHorizontally : {},
         ]}
       >
-        <Ionicons name='send' size={20} color={Colors.secondaryBackground} />
+        <Ionicons
+          disabled={isLoading}
+          name='send'
+          size={20}
+          color={Colors.secondaryBackground}
+        />
       </Pressable>
     </View>
   );

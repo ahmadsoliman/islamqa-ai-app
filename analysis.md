@@ -107,11 +107,14 @@ export default memo(ChatBubble);
 
 ## Next Steps
 
-1. Implement RTL support, including a language switcher, translations of all texts in English and Arabic, Arabic and RTL is the default UI
-2. Add AdMob integration
 3. Create settings menu
+4. Create a flag message for wrong info / unsafe
+5. encrypt messages
+6. display warning, info might be false
 
-4. Add typing indicators
-5. Implement copy functionality
-6. Implement search functionality
-7. Add animations and transitions
+7. Implement RTL support, including a language switcher, translations of all texts in English and Arabic, Arabic and RTL is the default UI
+8. Add AdMob integration
+9. Add typing indicators
+10. Implement copy functionality
+11. Implement search functionality
+12. Add animations and transitions

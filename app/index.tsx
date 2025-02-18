@@ -263,7 +263,7 @@ export default function ChatScreen() {
           </View>
         )}
 
-        <ChatInput onSend={handleSend} />
+        <ChatInput onSend={handleSend} isLoading={isLoading} />
       </View>
     </View>
   );

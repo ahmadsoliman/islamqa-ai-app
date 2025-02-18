@@ -43,8 +43,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredConversations = conversations.filter((conversation) =>
-    conversation.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredConversations = conversations.filter(
+    (conversation) =>
+      !searchQuery.trim() ||
+      conversation.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleDeleteConversation = (id: string) => {

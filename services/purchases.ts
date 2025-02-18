@@ -7,6 +7,7 @@ const API_KEY = {
   google: 'goog_xxxxxxxxxxxxxxxxxxxxxxxx',
 };
 
+// TODO: Implement after release
 export const usePurchases = () => {
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);

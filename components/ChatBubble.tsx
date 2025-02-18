@@ -1,10 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Alert,
+  SafeAreaView,
+  TextStyle,
+} from 'react-native';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import * as Haptics from 'expo-haptics';
 import { Message } from '../types/chat';
 import { Share } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
+import Markdown from 'react-native-markdown-display';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
 import { getTextDirectionStyle } from '../utils/styles';
@@ -65,15 +74,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
           isUser ? styles.userContainer : styles.botContainer,
         ]}
       >
-        <Text
-          style={[
-            styles.text,
-            getTextDirectionStyle(i18n),
-            isUser ? styles.userText : styles.botText,
-          ]}
-        >
-          {message.text}
-        </Text>
+        <SafeAreaView>
+          <Markdown
+            style={{
+              text: isUser ? styles.userText : styles.botText,
+              direction: getTextDirectionStyle(i18n),
+            }}
+          >
+            {message.text}
+          </Markdown>
+        </SafeAreaView>
         <Text
           style={[
             styles.timestamp,
@@ -117,10 +127,10 @@ const styles = StyleSheet.create({
   },
   userText: {
     color: Colors.secondaryBackground,
-  },
+  } as TextStyle,
   botText: {
     color: Colors.text,
-  },
+  } as TextStyle,
   timestamp: {
     fontSize: fontSize.small,
     color: Colors.text,
