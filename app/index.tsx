@@ -23,14 +23,17 @@ import {
 } from '../utils/storage';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
+import { AdInterstitial } from '@/components/AdInterstitial';
 
 const SIDEBAR_WIDTH = 350;
+const PROMPT_COUNT_TO_AD = 2;
 
 export default function ChatScreen() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
   >(null);
+  const [promptCount, setPromptCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userId, setUserId] = useState<string>('');
@@ -146,6 +149,8 @@ export default function ChatScreen() {
 
     setIsLoading(true);
 
+    setPromptCount((prev) => prev + 1);
+
     try {
       const response = await sendMessage(text, currentConversationId, userId);
       const botMessage: Message = {
@@ -200,6 +205,11 @@ export default function ChatScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Show Interstitial Ad every n prompts */}
+      <AdInterstitial
+        showAd={promptCount > 0 && promptCount % PROMPT_COUNT_TO_AD === 0}
+      />
+
       <StatusBar style='dark' />
       <View style={styles.content}>
         <Header

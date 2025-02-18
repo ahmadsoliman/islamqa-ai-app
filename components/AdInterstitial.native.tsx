@@ -28,5 +28,5 @@ export const AdInterstitial: React.FC<{
     }
   }, [showAd]);
 
-  return <> </>;
+  return <></>;
 };
