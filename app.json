@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "IslamQA",
-    "slug": "IslamQA",
+    "name": "IslamQA AI",
+    "slug": "IslamQA-AI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,18 +13,17 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.anonymous.IslamQA"
+      "bundleIdentifier": "com.anonymous.IslamQA-AI"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f1f9e7"
       },
       "permissions": [
-        "com.android.vending.BILLING",
         "com.android.vending.BILLING"
       ],
-      "package": "com.anonymous.IslamQA"
+      "package": "com.anonymous.IslamQA-AI"
     },
     "web": {
       "bundler": "metro",
@@ -39,7 +38,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#f1f9e7"
         }
       ],
       [
