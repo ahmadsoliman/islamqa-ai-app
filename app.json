@@ -2,7 +2,7 @@
   "expo": {
     "name": "IslamQA AI",
     "slug": "IslamQA-AI",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -13,7 +13,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.anonymous.IslamQA-AI"
+      "bundleIdentifier": "com.anonymous.IslamQA"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,10 @@
       "permissions": [
         "com.android.vending.BILLING"
       ],
-      "package": "com.anonymous.IslamQA-AI"
+      "package": "com.anonymous.IslamQA",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-4707665982612066~6315458491"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -42,18 +45,35 @@
         }
       ],
       [
+        "expo-dev-client"
+      ],
+      [
         "react-native-google-mobile-ads",
         {
           "androidAppId": "ca-app-pub-4707665982612066~6315458491",
           "iosAppId": "ca-app-pub-4707665982612066~4730914085"
         }
-      ],
-      [
-        "expo-dev-client"
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "react-native-google-mobile-ads": {
+        "android_app_id": "ca-app-pub-4707665982612066~6315458491",
+        "ios_app_id": "ca-app-pub-4707665982612066~4730914085"
+      },
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d33a3efb-0286-4d32-930a-68ce33f56f79"
+      }
+    },
+    "owner": "ahmad.soliman"
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-4707665982612066~6315458491",
+    "ios_app_id": "ca-app-pub-4707665982612066~4730914085"
   }
 }

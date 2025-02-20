@@ -111,10 +111,11 @@ export default memo(ChatBubble);
 4. Create a flag message for wrong info / unsafe
 5. encrypt messages
 6. display warning, info might be false
+7. instead of default message, show it before first message with prompt suggestions
 
-7. Implement RTL support, including a language switcher, translations of all texts in English and Arabic, Arabic and RTL is the default UI
-8. Add AdMob integration
-9. Add typing indicators
-10. Implement copy functionality
-11. Implement search functionality
-12. Add animations and transitions
+8. Implement RTL support, including a language switcher, translations of all texts in English and Arabic, Arabic and RTL is the default UI
+9. Add AdMob integration
+10. Add typing indicators
+11. Implement copy functionality
+12. Implement search functionality
+13. Add animations and transitions

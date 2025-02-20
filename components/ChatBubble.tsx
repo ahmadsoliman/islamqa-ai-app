@@ -75,14 +75,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
         ]}
       >
         <SafeAreaView>
-          <Markdown
-            style={{
-              text: isUser ? styles.userText : styles.botText,
-              direction: getTextDirectionStyle(i18n),
-            }}
-          >
-            {message.text}
-          </Markdown>
+          <Text>
+            <Markdown
+              style={{
+                text: isUser ? styles.userText : styles.botText,
+                direction: getTextDirectionStyle(i18n),
+              }}
+            >
+              {message.text}
+            </Markdown>
+          </Text>
         </SafeAreaView>
         <Text
           style={[
@@ -105,7 +107,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: '80%',
+    maxWidth: '90%',
     padding: spacing.md,
     marginVertical: spacing.sm,
     borderRadius: spacing.md,
@@ -113,12 +115,12 @@ const styles = StyleSheet.create({
   userContainer: {
     backgroundColor: Colors.primary,
     alignSelf: 'flex-end',
-    marginLeft: '20%',
+    marginLeft: '10%',
   },
   botContainer: {
     backgroundColor: Colors.secondaryBackground,
     alignSelf: 'flex-start',
-    marginRight: '20%',
+    marginRight: '10%',
     borderWidth: 1,
     borderColor: Colors.border,
   },

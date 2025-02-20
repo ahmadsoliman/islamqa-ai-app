@@ -16,27 +16,27 @@ export const usePurchases = () => {
     setIsPro(info.entitlements.active.pro_member !== undefined);
   };
 
-  useEffect(() => {
-    const setup = async () => {
-      try {
-        await Purchases.configure({
-          apiKey: Platform.OS === 'ios' ? API_KEY.apple : API_KEY.google,
-        });
-        const customerInfo = await Purchases.getCustomerInfo();
-        updateStatus(customerInfo);
-      } catch (error) {
-        // console.error('Purchases setup error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const setup = async () => {
+  //     try {
+  //       await Purchases.configure({
+  //         apiKey: Platform.OS === 'ios' ? API_KEY.apple : API_KEY.google,
+  //       });
+  //       const customerInfo = await Purchases.getCustomerInfo();
+  //       updateStatus(customerInfo);
+  //     } catch (error) {
+  //       // console.error('Purchases setup error:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    setup();
+  //   setup();
 
-    const listener = Purchases.addCustomerInfoUpdateListener(updateStatus);
-    // @ts-ignore
-    return () => listener?.remove();
-  }, []);
+  //   const listener = Purchases.addCustomerInfoUpdateListener(updateStatus);
+  //   // @ts-ignore
+  //   return () => listener?.remove();
+  // }, []);
 
   const handlePurchase = async () => {
     try {
