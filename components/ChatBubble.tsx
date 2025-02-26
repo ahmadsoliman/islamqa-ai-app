@@ -123,20 +123,22 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
               </Markdown>
             </Text>
           </SafeAreaView>
-          <Text
-            style={[
-              styles.timestamp,
-              {
-                textAlign: i18n.dir() === 'rtl' ? 'left' : 'right',
-                direction: i18n.dir(),
-              },
-            ]}
-          >
-            {message.timestamp.toLocaleTimeString(i18n.language, {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </Text>
+          {message.timestamp && (
+            <Text
+              style={[
+                styles.timestamp,
+                {
+                  textAlign: i18n.dir() === 'rtl' ? 'left' : 'right',
+                  direction: i18n.dir(),
+                },
+              ]}
+            >
+              {message.timestamp.toLocaleTimeString(i18n.language, {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Text>
+          )}
         </View>
       </Pressable>
 

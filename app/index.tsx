@@ -14,7 +14,7 @@ import { ChatInput } from '../components/ChatInput';
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { Colors } from '../constants/Colors';
-import { Message, Conversation, createInitialMessage } from '../types/chat';
+import { Message, Conversation } from '../types/chat';
 import { sendMessage } from '../services/api';
 import {
   saveConversations,
@@ -24,6 +24,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { AdInterstitial } from '@/components/AdInterstitial';
+import { usePurchases } from '@/services/purchases';
 
 const SIDEBAR_WIDTH = 350;
 const PROMPT_COUNT_TO_AD = 2;
@@ -39,6 +40,7 @@ export default function ChatScreen() {
   const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const { t, i18n } = useTranslation();
+  const { isPro } = usePurchases();
 
   const slideAnim = useRef(
     new Animated.Value(
@@ -87,7 +89,7 @@ export default function ChatScreen() {
       const newConversation: Conversation = {
         id: Math.random().toString(36).substring(2) + Date.now().toString(36),
         title: null,
-        messages: [createInitialMessage()],
+        messages: [],
         lastUpdated: new Date(),
         isTouched: false,
       };
@@ -206,9 +208,11 @@ export default function ChatScreen() {
   return (
     <View style={styles.container}>
       {/* Show Interstitial Ad every n prompts */}
-      <AdInterstitial
-        showAd={promptCount > 0 && promptCount % PROMPT_COUNT_TO_AD === 0}
-      />
+      {!isPro && (
+        <AdInterstitial
+          showAd={promptCount > 0 && promptCount % PROMPT_COUNT_TO_AD === 0}
+        />
+      )}
 
       <StatusBar style='dark' />
       <View style={styles.content}>
@@ -250,7 +254,17 @@ export default function ChatScreen() {
 
         <FlatList
           ref={flatListRef}
-          data={currentConversation?.messages || []}
+          data={
+            currentConversation?.messages.length
+              ? currentConversation.messages
+              : [
+                  {
+                    id: '0',
+                    sender: 'bot',
+                    text: t('initialMessage'),
+                  } as Message,
+                ]
+          }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ChatBubble message={item} />}
           contentContainerStyle={styles.chatContainer}
