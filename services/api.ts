@@ -1,5 +1,4 @@
-const API_URL =
-  'https://ahmadsoliman.app.n8n.cloud/webhook/2102e6c1-0ac3-41f1-9dd1-476b4f325b96';
+const API_URL = 'https://islamqaai.pythonanywhere.com/api';
 
 export const sendMessage = async (
   message: string,
@@ -7,7 +6,7 @@ export const sendMessage = async (
   userId: string
 ) => {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(API_URL + '/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
