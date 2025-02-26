@@ -4,10 +4,18 @@ export const Colors = {
   text: '#242424',
   secondaryBackground: '#ffffff',
   border: 'rgba(74, 124, 18, 0.2)',
-  error: '#ff4444',
-  success: '#00C851',
-  warning: '#ffbb33',
-  info: '#33b5e5',
+  secondary: '#8bbd43',
+  tertiary: '#d5e8b4',
+  accent: '#6a9f23',
+  error: '#d32f2f',
+  errorBackground: '#fdecea',
+  success: '#2e7d32',
+  successBackground: '#e8f5e9',
+  warning: '#ed6c02',
+  warningBackground: '#fff3e0',
+  info: '#0288d1',
+  infoBackground: '#e3f2fd',
+  disabled: '#bdbdbd',
 };
 
 export const fontSize = {

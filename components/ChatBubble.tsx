@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,8 @@ import Markdown from 'react-native-markdown-display';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
 import { getTextDirectionStyle } from '../utils/styles';
+import { FeedbackPopup } from './FeedbackPopup';
+import { reportMessage } from '@/services/api';
 
 interface ChatBubbleProps {
   message: Message;
@@ -25,28 +27,40 @@ interface ChatBubbleProps {
 export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
   const isUser = message.sender === 'user';
   const { t, i18n } = useTranslation();
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const handleLongPress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    const options: {
+      text: string;
+      onPress?: () => void | Promise<void>;
+      style?: 'cancel' | 'default' | 'destructive';
+    }[] = [
+      {
+        text: t('cancel'),
+        style: 'cancel',
+      },
+      isUser
+        ? {
+            text: t('copy'),
+            onPress: handleCopy,
+          }
+        : {
+            text: t('report'),
+            onPress: () => setShowFeedback(true),
+          },
+      {
+        text: t('share'),
+        onPress: handleShare,
+      },
+    ];
+
     Alert.alert(
       t('copyMessageOptions'),
       message?.text?.length > 100
         ? message?.text?.substring(0, 200) + '...'
         : message?.text || '',
-      [
-        {
-          text: t('cancel'),
-          style: 'cancel',
-        },
-        {
-          text: t('copy'),
-          onPress: handleCopy,
-        },
-        {
-          text: t('share'),
-          onPress: handleShare,
-        },
-      ],
+      options,
       { cancelable: true }
     );
   };
@@ -66,42 +80,73 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
     });
   };
 
+  const handleSubmitFeedback = async (feedback: {
+    message: string;
+    issue: string;
+    reasons: string[];
+  }) => {
+    try {
+      await reportMessage(feedback);
+      setShowFeedback(false);
+      Toast.show({
+        type: 'success',
+        text1: t('reportSubmitted'),
+        visibilityTime: 2000,
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: t('apiErrorMessage'),
+        visibilityTime: 2000,
+      });
+    }
+  };
+
   return (
-    <Pressable onLongPress={handleLongPress}>
-      <View
-        style={[
-          styles.container,
-          isUser ? styles.userContainer : styles.botContainer,
-        ]}
-      >
-        <SafeAreaView>
-          <Text>
-            <Markdown
-              style={{
-                text: isUser ? styles.userText : styles.botText,
-                direction: getTextDirectionStyle(i18n),
-              }}
-            >
-              {message.text}
-            </Markdown>
-          </Text>
-        </SafeAreaView>
-        <Text
+    <>
+      <Pressable onLongPress={handleLongPress}>
+        <View
           style={[
-            styles.timestamp,
-            {
-              textAlign: i18n.dir() === 'rtl' ? 'left' : 'right',
-              direction: i18n.dir(),
-            },
+            styles.container,
+            isUser ? styles.userContainer : styles.botContainer,
           ]}
         >
-          {message.timestamp.toLocaleTimeString(i18n.language, {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
-      </View>
-    </Pressable>
+          <SafeAreaView>
+            <Text>
+              <Markdown
+                style={{
+                  text: isUser ? styles.userText : styles.botText,
+                  direction: getTextDirectionStyle(i18n),
+                }}
+              >
+                {message.text}
+              </Markdown>
+            </Text>
+          </SafeAreaView>
+          <Text
+            style={[
+              styles.timestamp,
+              {
+                textAlign: i18n.dir() === 'rtl' ? 'left' : 'right',
+                direction: i18n.dir(),
+              },
+            ]}
+          >
+            {message.timestamp.toLocaleTimeString(i18n.language, {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Text>
+        </View>
+      </Pressable>
+
+      <FeedbackPopup
+        visible={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        message={message.text}
+        onSubmit={handleSubmitFeedback}
+      />
+    </>
   );
 };
 

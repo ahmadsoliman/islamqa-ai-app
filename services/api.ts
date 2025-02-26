@@ -31,3 +31,30 @@ export const sendMessage = async (
     throw error;
   }
 };
+
+export const reportMessage = async (feedback: {
+  message: string;
+  issue: string;
+  reasons: string[];
+}) => {
+  try {
+    const response = await fetch(API_URL + '/report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: feedback.message,
+        issue: feedback.issue,
+        reasons: feedback.reasons,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit report');
+    }
+  } catch (error) {
+    console.error('Error submitting report:', error);
+    throw error;
+  }
+};
