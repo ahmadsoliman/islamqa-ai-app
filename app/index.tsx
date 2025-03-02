@@ -29,7 +29,7 @@ import { usePurchases } from '@/services/purchases';
 const SIDEBAR_WIDTH = 350;
 const PROMPT_COUNT_TO_AD = 2;
 
-export default function ChatScreen() {
+export default function Index() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
@@ -255,15 +255,16 @@ export default function ChatScreen() {
         <FlatList
           ref={flatListRef}
           data={
-            currentConversation?.messages.length
-              ? currentConversation.messages
-              : [
-                  {
-                    id: '0',
-                    sender: 'bot',
-                    text: t('initialMessage'),
-                  } as Message,
-                ]
+            // currentConversation?.messages.length
+            // ?
+            currentConversation?.messages || []
+            // : [
+            //     {
+            //       id: '0',
+            //       sender: 'bot',
+            //       text: t('initialMessage'),
+            //     } as Message,
+            //   ]
           }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ChatBubble message={item} />}
