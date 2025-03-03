@@ -1,4 +1,7 @@
-const API_URL = 'https://islamqaai.pythonanywhere.com/api';
+import { getIntegrityToken } from '@/services/integrity';
+
+export const API_URL = 'https://islamqaai.pythonanywhere.com/api';
+// export const API_URL = 'http://192.168.0.100:5001/api';
 
 export const sendMessage = async (
   message: string,
@@ -6,6 +9,8 @@ export const sendMessage = async (
   userId: string
 ) => {
   try {
+    const integrityToken = await getIntegrityToken(API_URL);
+
     const response = await fetch(API_URL + '/chat', {
       method: 'POST',
       headers: {
@@ -18,6 +23,7 @@ export const sendMessage = async (
         user_id: userId,
         message_id: Date.now().toString(),
         chat_id: chatId,
+        integrity_token: integrityToken,
       }),
     });
 
@@ -38,6 +44,8 @@ export const reportMessage = async (feedback: {
   reasons: string[];
 }) => {
   try {
+    const integrityToken = await getIntegrityToken(API_URL);
+
     const response = await fetch(API_URL + '/report', {
       method: 'POST',
       headers: {
@@ -47,6 +55,7 @@ export const reportMessage = async (feedback: {
         message: feedback.message,
         issue: feedback.issue,
         reasons: feedback.reasons,
+        integrity_token: integrityToken,
       }),
     });
 

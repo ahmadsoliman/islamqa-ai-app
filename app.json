@@ -2,7 +2,7 @@
   "expo": {
     "name": "IslamQA AI",
     "slug": "IslamQA-AI",
-    "version": "1.0.3",
+    "version": "1.1.1",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -54,7 +54,9 @@
           "iosAppId": "ca-app-pub-4707665982612066~4730914085",
           "delayAppMeasurementInit": true
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true,

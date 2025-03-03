@@ -5,14 +5,23 @@ import { I18nManager } from 'react-native';
 
 import { AdBanner } from '../components/AdBanner';
 import { usePurchases } from '../services/purchases';
+import { useEffect } from 'react';
+import { preparePlayIntegrity } from '@/services/integrity';
+
+const GOOGLE_CLOUD_PROJECT_NUMBER = '617383767131';
 
 export default function RootLayout() {
-  myi18n.init();
   const { i18n } = useTranslation();
   const { isPro } = usePurchases();
 
-  I18nManager.allowRTL(i18n.dir() === 'rtl');
-  I18nManager.forceRTL(i18n.dir() === 'rtl');
+  useEffect(() => {
+    myi18n.init();
+
+    I18nManager.allowRTL(i18n.dir() === 'rtl');
+    I18nManager.forceRTL(i18n.dir() === 'rtl');
+
+    preparePlayIntegrity(GOOGLE_CLOUD_PROJECT_NUMBER);
+  }, []);
 
   return (
     <I18nextProvider i18n={i18n}>
