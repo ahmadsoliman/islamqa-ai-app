@@ -5,12 +5,14 @@ export const preparePlayIntegrity = async (
 ) => {
   try {
     const isAvailable = await PlayIntegrity.isPlayIntegrityAvailable();
-    console.debug('Play Integrity availablity:', isAvailable);
+    // console.debug('Play Integrity availablity:', isAvailable);
 
     // Prepare provider i.e. on application startup
-    await PlayIntegrity.prepareStandardIntegrityTokenProvider(
-      googleCloudProjectNumber
-    );
+    if (isAvailable) {
+      await PlayIntegrity.prepareStandardIntegrityTokenProvider(
+        googleCloudProjectNumber
+      );
+    }
   } catch (e: any) {
     // e.code 	- IntegrityErrorCode, see https://developer.android.com/google/play/integrity/reference/com/google/android/play/core/integrity/model/IntegrityErrorCode.html#summary
     // e.message 	- Error message

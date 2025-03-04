@@ -23,8 +23,17 @@ export const AdInterstitial: React.FC<{
           interstitial.show();
         }
       );
+      const unsubscribe2 = interstitial.addAdEventListener(
+        AdEventType.ERROR,
+        (e) => {
+          console.error('Interstitial ad failed to load', e);
+        }
+      );
       interstitial.load();
-      return () => unsubscribe();
+      return () => {
+        unsubscribe();
+        unsubscribe2();
+      };
     }
   }, [showAd]);
 

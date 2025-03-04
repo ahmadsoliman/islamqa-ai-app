@@ -20,6 +20,7 @@ import {
   getTextInputDirectionStyle,
 } from '../utils/styles';
 import { SearchBar } from './SearchBar';
+import { PrivacySettings } from './PrivacySettings';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -153,6 +154,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </ScrollView>
 
       <View style={styles.footer}>
+        <PrivacySettings />
+
         <LanguageSwitcher onLanguageChange={onLanguageChange} />
       </View>
     </AnimatedView>
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSize.large,
     fontWeight: 'bold',
-    color: Colors.text,
+    color: Colors.primary,
   },
   newChatButton: {
     alignItems: 'center',

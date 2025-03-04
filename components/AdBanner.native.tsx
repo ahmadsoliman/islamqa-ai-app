@@ -15,7 +15,10 @@ export const AdBanner = () => (
     {Platform.OS === 'android' && (
       <BannerAd
         unitId={adUnitId}
-        size={BannerAdSize.BANNER}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        onAdFailedToLoad={(error) =>
+          console.error('Banner ad failed to load', error)
+        }
         requestOptions={
           {
             // requestNonPersonalizedAdsOnly: true,

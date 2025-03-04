@@ -12,7 +12,8 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.anonymous.IslamQA"
+      "bundleIdentifier": "com.anonymous.IslamQA",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,6 +24,7 @@
         "com.android.vending.BILLING"
       ],
       "package": "com.anonymous.IslamQA",
+      "googleServicesFile": "./google-services.json",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-4707665982612066~6315458491",
         "delayAppMeasurementInit": true
@@ -56,7 +58,18 @@
         }
       ],
       "expo-secure-store",
-      "expo-build-properties"
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          },
+          "android": {
+            "extraProguardRules": "-keep class com.google.android.gms.internal.consent_sdk.** { *; }"
+          }
+        }
+      ],
+      "@react-native-firebase/app"
     ],
     "experiments": {
       "typedRoutes": true,

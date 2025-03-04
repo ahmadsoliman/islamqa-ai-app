@@ -228,43 +228,18 @@ export default function Index() {
           />
         )}
 
-        <Animated.View
-          style={[
-            styles.sidebar,
-            {
-              transform: [{ translateX: slideAnim }],
-            },
-          ]}
-        >
-          <Sidebar
-            conversations={conversations}
-            currentConversationId={currentConversationId}
-            onSelectConversation={(id) => {
-              setCurrentConversationId(id);
-              setIsSidebarOpen(false);
-            }}
-            onNewConversation={createNewConversation}
-            onDeleteConversation={deleteConversation}
-            onClose={() => setIsSidebarOpen(false)}
-            onLanguageChange={() =>
-              setTimeout(() => setIsSidebarOpen(false), 100)
-            }
-          />
-        </Animated.View>
-
         <FlatList
           ref={flatListRef}
           data={
-            // currentConversation?.messages.length
-            // ?
-            currentConversation?.messages || []
-            // : [
-            //     {
-            //       id: '0',
-            //       sender: 'bot',
-            //       text: t('initialMessage'),
-            //     } as Message,
-            //   ]
+            currentConversation?.messages.length
+              ? currentConversation?.messages
+              : [
+                  {
+                    id: '0',
+                    sender: 'bot',
+                    text: t('initialMessage'),
+                  } as Message,
+                ]
           }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ChatBubble message={item} />}
@@ -280,6 +255,30 @@ export default function Index() {
 
         <ChatInput onSend={handleSend} isLoading={isLoading} />
       </View>
+
+      <Animated.View
+        style={[
+          styles.sidebar,
+          {
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
+      >
+        <Sidebar
+          conversations={conversations}
+          currentConversationId={currentConversationId}
+          onSelectConversation={(id) => {
+            setCurrentConversationId(id);
+            setIsSidebarOpen(false);
+          }}
+          onNewConversation={createNewConversation}
+          onDeleteConversation={deleteConversation}
+          onClose={() => setIsSidebarOpen(false)}
+          onLanguageChange={() =>
+            setTimeout(() => setIsSidebarOpen(false), 100)
+          }
+        />
+      </Animated.View>
     </View>
   );
 }

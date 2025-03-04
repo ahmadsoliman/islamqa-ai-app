@@ -19,6 +19,8 @@ const resources = {
       apiErrorMessage: 'Sorry, I could not process your request.',
       promptPlaceholder: 'Type your question...',
       copyMessageOptions: 'Message options',
+      showPrivacyForm: 'Privacy Settings',
+      privacyChanged: 'Privacy Settings changed succesfully',
       report: 'Report',
       provideFeedback: 'Provide feedback',
       feedbackPlaceholder:
@@ -60,6 +62,8 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
       apiErrorMessage: 'عذرًا، لم أتمكن من معالجة طلبك.',
       promptPlaceholder: 'اكتب سؤالك...',
       copyMessageOptions: 'خيارات الرسالة',
+      showPrivacyForm: 'إعدادات الخصوصية',
+      privacyChanged: 'تم تغيير إعدادات الخصوصية بنجاح',
       report: 'إبلاغ',
       provideFeedback: 'تقديم ملاحظات',
       feedbackPlaceholder: 'ما هي المشكلة في الرد؟ كيف يمكن تحسينه؟',
