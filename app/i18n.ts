@@ -21,6 +21,11 @@ const resources = {
       copyMessageOptions: 'Message options',
       showPrivacyForm: 'Privacy Settings',
       privacyChanged: 'Privacy Settings changed succesfully',
+      updateAvailable: 'Update Available',
+      updateAvailableMessage:
+        'A new version of the app is available. Please update to continue using the app.',
+      updateNow: 'Update Now',
+
       report: 'Report',
       provideFeedback: 'Provide feedback',
       feedbackPlaceholder:
@@ -64,6 +69,11 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
       copyMessageOptions: 'خيارات الرسالة',
       showPrivacyForm: 'إعدادات الخصوصية',
       privacyChanged: 'تم تغيير إعدادات الخصوصية بنجاح',
+      updateAvailable: 'يوجد تحديث',
+      updateAvailableMessage:
+        'يتوفر إصدار جديد من التطبيق. يرجى التحديث لمواصلة استخدام التطبيق.',
+      updateNow: 'قم بالتحديث الآن',
+
       report: 'إبلاغ',
       provideFeedback: 'تقديم ملاحظات',
       feedbackPlaceholder: 'ما هي المشكلة في الرد؟ كيف يمكن تحسينه؟',

@@ -57,7 +57,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
 const styles = StyleSheet.create({
   container: {
     padding: spacing.xs,
-    // paddingVertical: 0,
+    paddingVertical: spacing.sm,
     backgroundColor: Colors.background,
     alignItems: 'center',
     columnGap: spacing.sm,

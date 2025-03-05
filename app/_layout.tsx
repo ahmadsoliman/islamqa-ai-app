@@ -2,17 +2,19 @@ import { Stack } from 'expo-router';
 import * as myi18n from './i18n';
 import { useTranslation, I18nextProvider } from 'react-i18next';
 import { I18nManager } from 'react-native';
+import { initializeApp } from '@react-native-firebase/app';
 
 import { AdBanner } from '../components/AdBanner';
 import { usePurchases } from '../services/purchases';
 import { useEffect, useState } from 'react';
 import { preparePlayIntegrity } from '@/services/integrity';
 import { Ump } from 'google-ump-react-native';
+import { checkAppVersion } from '@/services/androidVersion';
 
 const GOOGLE_CLOUD_PROJECT_NUMBER = '617383767131';
 
 export default function RootLayout() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const { isPro } = usePurchases();
   const [canShowAds, setCanShowAds] = useState(false);
 
@@ -21,6 +23,8 @@ export default function RootLayout() {
 
     I18nManager.allowRTL(i18n.dir() === 'rtl');
     I18nManager.forceRTL(i18n.dir() === 'rtl');
+
+    checkAppVersion(t);
 
     // Ump.reset();
     const initMobileAds = async () => {
@@ -31,6 +35,11 @@ export default function RootLayout() {
     initMobileAds();
 
     preparePlayIntegrity(GOOGLE_CLOUD_PROJECT_NUMBER);
+
+    initializeApp({
+      appId: '1:115830976181:android:4ab1366b9fbd1da5a318fc',
+      projectId: 'islamqa-ai-app',
+    });
   }, []);
 
   return (
