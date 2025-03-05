@@ -42,7 +42,7 @@ async function generateNonce(API_URL: string) {
     const data = await response.json();
     return data.nonce;
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error generating nonce:', error);
     throw error;
   }
 }

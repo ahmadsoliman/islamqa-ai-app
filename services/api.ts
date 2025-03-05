@@ -30,7 +30,9 @@ export const sendMessage = async (
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(
+        'Network response was not ok: ' + (await response.json()).error
+      );
     }
 
     return await response.json();
@@ -62,7 +64,9 @@ export const reportMessage = async (feedback: {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to submit report');
+      throw new Error(
+        'Failed to submit report: ' + (await response.json()).error
+      );
     }
   } catch (error) {
     console.error('Error submitting report:', error);
