@@ -4,6 +4,7 @@
 node_modules/
 
 google-services.json
+.plandex/
 
 # build
 android/

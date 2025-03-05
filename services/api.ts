@@ -1,6 +1,8 @@
 import { getIntegrityToken } from '@/services/integrity';
 
-export const API_URL = 'https://islamqaai.pythonanywhere.com/api';
+export const API_URL =
+  'https://islamqaai-api-617383767131.europe-west3.run.app/api';
+// export const API_URL = 'https://islamqaai.pythonanywhere.com/api';
 // export const API_URL = 'http://192.168.0.100:5001/api';
 
 export const sendMessage = async (

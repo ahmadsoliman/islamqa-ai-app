@@ -2,7 +2,6 @@ import { Stack } from 'expo-router';
 import * as myi18n from './i18n';
 import { useTranslation, I18nextProvider } from 'react-i18next';
 import { I18nManager } from 'react-native';
-import { initializeApp } from '@react-native-firebase/app';
 
 import { AdBanner } from '../components/AdBanner';
 import { usePurchases } from '../services/purchases';
@@ -35,11 +34,6 @@ export default function RootLayout() {
     initMobileAds();
 
     preparePlayIntegrity(GOOGLE_CLOUD_PROJECT_NUMBER);
-
-    initializeApp({
-      appId: '1:115830976181:android:4ab1366b9fbd1da5a318fc',
-      projectId: 'islamqa-ai-app',
-    });
   }, []);
 
   return (

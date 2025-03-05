@@ -12,7 +12,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.anonymous.IslamQA",
+      "bundleIdentifier": "com.doc.IslamQA_AI",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -23,7 +23,7 @@
       "permissions": [
         "com.android.vending.BILLING"
       ],
-      "package": "com.anonymous.IslamQA",
+      "package": "com.doc.IslamQA_AI",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-4707665982612066~6315458491",
