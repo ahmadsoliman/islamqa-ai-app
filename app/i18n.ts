@@ -14,6 +14,7 @@ const resources = {
       copy: 'Copy',
       share: 'Share',
       copied: 'Copied to clipboard',
+      loading: 'Loading...',
       searchMessages: 'Search messages...',
       islamqaAI: 'IslamQA AI',
       apiErrorMessage: 'Sorry, I could not process your request.',
@@ -25,6 +26,7 @@ const resources = {
       updateAvailableMessage:
         'A new version of the app is available. Please update to continue using the app.',
       updateNow: 'Update Now',
+      removeAds: 'Remove Ads',
 
       report: 'Report',
       provideFeedback: 'Provide feedback',
@@ -62,6 +64,7 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
       copy: 'نسخ',
       share: 'مشاركة',
       copied: 'تم النسخ إلى الحافظة',
+      loading: 'انتظر لحظة...',
       searchMessages: 'ابحث في الرسائل...',
       islamqaAI: 'الإسلام سؤال وجواب AI',
       apiErrorMessage: 'عذرًا، لم أتمكن من معالجة طلبك.',
@@ -73,6 +76,7 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
       updateAvailableMessage:
         'يتوفر إصدار جديد من التطبيق. يرجى التحديث لمواصلة استخدام التطبيق.',
       updateNow: 'قم بالتحديث الآن',
+      removeAds: 'قم بإزالة الإعلانات',
 
       report: 'إبلاغ',
       provideFeedback: 'تقديم ملاحظات',

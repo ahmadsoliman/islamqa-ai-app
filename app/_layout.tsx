@@ -14,7 +14,7 @@ const GOOGLE_CLOUD_PROJECT_NUMBER = '617383767131';
 
 export default function RootLayout() {
   const { i18n, t } = useTranslation();
-  const { isPro } = usePurchases();
+  const { hasRemovedAds } = usePurchases();
   const [canShowAds, setCanShowAds] = useState(false);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function RootLayout() {
           headerBackButtonMenuEnabled: false,
         }}
       />
-      {!isPro && canShowAds && <AdBanner />}
+      {!hasRemovedAds && canShowAds && <AdBanner />}
     </I18nextProvider>
   );
 }

@@ -40,7 +40,7 @@ export default function Index() {
   const [userId, setUserId] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const { t, i18n } = useTranslation();
-  const { isPro } = usePurchases();
+  const { hasRemovedAds } = usePurchases();
 
   const slideAnim = useRef(
     new Animated.Value(
@@ -208,7 +208,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       {/* Show Interstitial Ad every n prompts */}
-      {!isPro && (
+      {!hasRemovedAds && (
         <AdInterstitial
           showAd={promptCount > 0 && promptCount % PROMPT_COUNT_TO_AD === 0}
         />

@@ -6,7 +6,6 @@ import {
   ScrollView,
   Pressable,
   Alert,
-  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, fontSize, spacing } from '../constants/Colors';
@@ -14,13 +13,11 @@ import { Conversation } from '../types/chat';
 import { AnimatedView } from './AnimatedView';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import {
-  getFlexDirectionStyle,
-  getTextDirectionStyle,
-  getTextInputDirectionStyle,
-} from '../utils/styles';
+import { getFlexDirectionStyle, getTextDirectionStyle } from '../utils/styles';
 import { SearchBar } from './SearchBar';
 import { PrivacySettings } from './PrivacySettings';
+import { RemoveAdsButton } from './RemoveAdsButton';
+import { usePurchases } from '@/services/purchases';
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -42,6 +39,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLanguageChange,
 }) => {
   const { t, i18n } = useTranslation();
+
+  const {
+    hasRemovedAds,
+    loading: purchaseLoading,
+    purchaseRemoveAds,
+    removeAdsPackage,
+  } = usePurchases();
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredConversations = conversations.filter(
@@ -154,6 +159,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </ScrollView>
 
       <View style={styles.footer}>
+        {!hasRemovedAds && (
+          <RemoveAdsButton
+            loading={purchaseLoading}
+            onPress={purchaseRemoveAds}
+            priceString={removeAdsPackage?.product.priceString || '$2.99'}
+          />
+        )}
+
         <PrivacySettings />
 
         <LanguageSwitcher onLanguageChange={onLanguageChange} />

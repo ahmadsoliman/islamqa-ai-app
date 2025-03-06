@@ -12,7 +12,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.doc.IslamQA_AI",
+      "bundleIdentifier": "com.anonymous.IslamQA",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -23,7 +23,7 @@
       "permissions": [
         "com.android.vending.BILLING"
       ],
-      "package": "com.doc.IslamQA_AI",
+      "package": "com.anonymous.IslamQA",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-4707665982612066~6315458491",
@@ -69,7 +69,8 @@
           }
         }
       ],
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "./android-manifest-launch-mode-plugin"
     ],
     "experiments": {
       "typedRoutes": true,
