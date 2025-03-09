@@ -65,5 +65,6 @@ export const getIntegrityToken = async (API_URL: string) => {
     console.error(
       `Error requesting standard Integrity Token(${e.code}): ${e.message}`
     );
+    throw e;
   }
 };

@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import * as myi18n from './i18n';
 import { useTranslation, I18nextProvider } from 'react-i18next';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 
 import { AdBanner } from '../components/AdBanner';
 import { usePurchases } from '../services/purchases';
@@ -13,17 +13,16 @@ import { checkAppVersion } from '@/services/androidVersion';
 const GOOGLE_CLOUD_PROJECT_NUMBER = '617383767131';
 
 export default function RootLayout() {
+  myi18n.init();
   const { i18n, t } = useTranslation();
   const { hasRemovedAds } = usePurchases();
   const [canShowAds, setCanShowAds] = useState(false);
 
   useEffect(() => {
-    myi18n.init();
-
     I18nManager.allowRTL(i18n.dir() === 'rtl');
     I18nManager.forceRTL(i18n.dir() === 'rtl');
 
-    checkAppVersion(t);
+    if (Platform.OS === 'android') checkAppVersion(t);
 
     // Ump.reset();
     const initMobileAds = async () => {

@@ -9,13 +9,9 @@ export const checkAppVersion = async (t: TFunction) => {
   const latestVersion = await VersionCheck.getLatestVersion();
   const latestVersionArr = latestVersion.split('.').map((n) => parseInt(n));
 
-  const updateNeededResult = await VersionCheck.needUpdate({
-    currentVersion,
-    latestVersion,
-  });
+  const storeUrl = await VersionCheck.getPlayStoreUrl();
 
   const updateNeeded =
-    updateNeededResult.isNeeded ||
     latestVersionArr[0] > currentVersionArr[0] ||
     (latestVersionArr[0] === currentVersionArr[0] &&
       latestVersionArr[1] > currentVersionArr[1]);
@@ -28,7 +24,7 @@ export const checkAppVersion = async (t: TFunction) => {
         {
           text: t('updateNow'),
           onPress: () => {
-            Linking.openURL(updateNeededResult.storeUrl);
+            Linking.openURL(storeUrl);
           },
         },
       ],

@@ -24,7 +24,7 @@ interface ChatBubbleProps {
   message: Message;
 }
 
-export const ChatBubble: React.FC<ChatBubbleProps> = ({ message }) => {
+const ChatBubbleComponent: React.FC<ChatBubbleProps> = ({ message }) => {
   const isUser = message.sender === 'user';
   const { t, i18n } = useTranslation();
   const [showFeedback, setShowFeedback] = useState(false);
@@ -187,3 +187,5 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
 });
+
+export const ChatBubble = React.memo(ChatBubbleComponent);

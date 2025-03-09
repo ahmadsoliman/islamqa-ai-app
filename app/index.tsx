@@ -8,6 +8,7 @@ import {
   Pressable,
   Dimensions,
   Platform,
+  Keyboard,
 } from 'react-native';
 import { ChatBubble } from '../components/ChatBubble';
 import { ChatInput } from '../components/ChatInput';
@@ -118,7 +119,7 @@ export default function Index() {
   };
 
   const handleSend = async (text: string) => {
-    if (!currentConversationId || !userId) return;
+    if (!currentConversationId || !userId || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -151,10 +152,18 @@ export default function Index() {
 
     setIsLoading(true);
 
+    Keyboard.dismiss();
+    flatListRef.current?.scrollToEnd();
+
     setPromptCount((prev) => prev + 1);
 
     try {
-      const response = await sendMessage(text, currentConversationId, userId);
+      const response = await sendMessage(
+        text,
+        currentConversationId,
+        userId,
+        getCurrentConversation()?.messages
+      );
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: response.message || t('apiErrorMessage'),
@@ -200,6 +209,7 @@ export default function Index() {
       await saveConversations(errorConversations);
     } finally {
       setIsLoading(false);
+      flatListRef.current?.scrollToEnd();
     }
   };
 
