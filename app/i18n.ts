@@ -28,6 +28,12 @@ const resources = {
       updateNow: 'Update Now',
       removeAds: 'Remove Ads',
 
+      loadingState0: 'Processing your question...',
+      loadingState1: 'Finding similar questions...',
+      loadingState2: 'This is taking longer than usual',
+      loadingState2Subtext:
+        'Please bear with us while we generate the best answer...',
+
       report: 'Report',
       provideFeedback: 'Provide feedback',
       feedbackPlaceholder:
@@ -77,6 +83,11 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
         'يتوفر إصدار جديد من التطبيق. يرجى التحديث لمواصلة استخدام التطبيق.',
       updateNow: 'قم بالتحديث الآن',
       removeAds: 'قم بإزالة الإعلانات',
+
+      loadingState0: 'يتم معالجة سؤالك...',
+      loadingState1: 'أبحث عن أسئلة مشابهه...',
+      loadingState2: 'هذا إستغرق أكتر من المعتاد',
+      loadingState2Subtext: 'من فضلك ابقى معي لأجد أفضل إجابة...',
 
       report: 'إبلاغ',
       provideFeedback: 'تقديم ملاحظات',

@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   FlatList,
-  ActivityIndicator,
   Animated,
   Pressable,
   Dimensions,
@@ -26,6 +25,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { AdInterstitial } from '@/components/AdInterstitial';
 import { usePurchases } from '@/services/purchases';
+import LoadingComponent from '@/components/LoadingComponent';
 
 const SIDEBAR_WIDTH = 350;
 const PROMPT_COUNT_TO_AD = 2;
@@ -257,11 +257,7 @@ export default function Index() {
           onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         />
 
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator color={Colors.primary} />
-          </View>
-        )}
+        {isLoading && <LoadingComponent />}
 
         <ChatInput onSend={handleSend} isLoading={isLoading} />
       </View>
@@ -300,7 +296,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 0, // Removed the top margin/padding
+    marginTop: 0,
   },
   overlay: {
     position: 'absolute',
@@ -324,9 +320,5 @@ const styles = StyleSheet.create({
   chatContainer: {
     padding: 16,
     paddingBottom: 32,
-  },
-  loadingContainer: {
-    padding: 16,
-    alignItems: 'center',
   },
 });
