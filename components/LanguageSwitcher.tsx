@@ -3,6 +3,7 @@ import { I18nManager, Pressable, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors, fontSize, spacing } from '../constants/Colors';
 import { getTextDirectionStyle } from '../utils/styles';
+import { setLanguage } from '@/utils/storage';
 
 export const LanguageSwitcher: React.FC<{ onLanguageChange: () => void }> = ({
   onLanguageChange,
@@ -15,6 +16,8 @@ export const LanguageSwitcher: React.FC<{ onLanguageChange: () => void }> = ({
 
     I18nManager.allowRTL(i18n.dir() === 'rtl');
     I18nManager.forceRTL(i18n.dir() === 'rtl');
+
+    setLanguage(newLang);
     onLanguageChange();
   };
 

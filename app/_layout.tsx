@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { preparePlayIntegrity } from '@/services/integrity';
 import { Ump } from 'google-ump-react-native';
 import { checkAppVersion } from '@/services/androidVersion';
+import { getLanguage } from '@/utils/storage';
 
 const GOOGLE_CLOUD_PROJECT_NUMBER = '617383767131';
 
@@ -19,12 +20,17 @@ export default function RootLayout() {
   const [canShowAds, setCanShowAds] = useState(false);
 
   useEffect(() => {
-    I18nManager.allowRTL(i18n.dir() === 'rtl');
-    I18nManager.forceRTL(i18n.dir() === 'rtl');
+    const loadLanguage = async () => {
+      i18n.changeLanguage(await getLanguage());
+
+      I18nManager.allowRTL(i18n.dir() === 'rtl');
+      I18nManager.forceRTL(i18n.dir() === 'rtl');
+    };
+    loadLanguage();
 
     if (Platform.OS === 'android') checkAppVersion(t);
 
-    // Ump.reset();
+    // Ump.reset(); // uncomment this to reset the Ump / european ads consent form state
     const initMobileAds = async () => {
       if ((await Ump.requestInfoUpdate()).canRequestAds) {
         setCanShowAds(true);

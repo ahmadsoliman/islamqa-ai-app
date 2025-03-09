@@ -3,6 +3,7 @@ import { Conversation } from '../types/chat';
 
 const STORAGE_KEY = 'islamqa_conversations';
 const USER_ID_KEY = 'islamqa_user_id';
+const LANGUAGE_KEY = 'islamqa_language';
 
 export const saveConversations = async (conversations: Conversation[]) => {
   try {
@@ -55,5 +56,24 @@ export const getUserId = async (): Promise<string> => {
   } catch (error) {
     console.error('Error with user ID:', error);
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  }
+};
+
+export const getLanguage = async (): Promise<string> => {
+  try {
+    let userId = await AsyncStorage.getItem(LANGUAGE_KEY);
+
+    return userId || 'ar';
+  } catch (error) {
+    console.error('Error loading language from storage:', error);
+    return 'ar';
+  }
+};
+
+export const setLanguage = async (languageCode: string): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(LANGUAGE_KEY, languageCode);
+  } catch (error) {
+    console.error('Error saving language to storage:', error);
   }
 };
