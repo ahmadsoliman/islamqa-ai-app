@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "617383767131",
+    "project_id": "vocal-etching-452215-g7",
+    "storage_bucket": "vocal-etching-452215-g7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617383767131:android:d169b0c0822d10e0a8e37e",
+        "android_client_info": {
+          "package_name": "com.anonymous.IslamQA"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPMpwQbsvDxwaK6-yKkAdiJI2oiIftWUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
