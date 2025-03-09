@@ -5,6 +5,10 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      introTitle: 'What can I help you with?',
+      introDescription:
+        "I'm a Muslim scholar chatbot specialized in answering religious questions through the database of IslamQA website.",
+      disclaimer: 'Responses are AI generated and may contain inaccuracies.',
       newConversation: 'New conversation',
       searchConversations: 'Search conversations...',
       deleteConversation: 'Delete Conversation',
@@ -61,6 +65,11 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
   },
   ar: {
     translation: {
+      introTitle: 'كيف يمكنني مساعدتك؟ ',
+      introDescription:
+        'أنا روبوت دردشة إسلامي متخصص في الإجابة على الأسئلة الدينية من خلال قاعدة بيانات موقع الإسلام سؤال وجواب.',
+      disclaimer:
+        'الإجابات تولد بواسطة الذكاء الاصطناعي وقد تحتوي على معلومات غير دقيقة.',
       newConversation: 'محادثة جديدة',
       searchConversations: 'ابحث في المحادثات...',
       deleteConversation: 'حذف المحادثة',
@@ -83,6 +92,7 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
         'يتوفر إصدار جديد من التطبيق. يرجى التحديث لمواصلة استخدام التطبيق.',
       updateNow: 'قم بالتحديث الآن',
       removeAds: 'قم بإزالة الإعلانات',
+      l: [],
 
       loadingState0: 'يتم معالجة سؤالك...',
       loadingState1: 'أبحث عن أسئلة مشابهه...',
@@ -115,6 +125,21 @@ Feel free to ask your question, and I'll search the approved fatwas to provide y
     },
   },
 };
+
+export const ENGLISH_SUGGESTIONS = [
+  'What are the pillars of Islam?',
+  'What is the ruling on interest?',
+  'What are the rights of neighbors?',
+  'What is the importance of prayer?',
+  'How do I repent for past sins?',
+];
+export const ARABIC_SUGGESTIONS = [
+  'ما هي أركان الإسلام؟',
+  'ما هو حكم فائدة البنك؟',
+  'ما هي حقوق الجيران؟',
+  'ما هي أهمية الصلاة؟',
+  'كيف أتوب عن الذنوب الماضية؟',
+];
 
 i18n.use(initReactI18next).init({
   compatibilityJSON: 'v4',

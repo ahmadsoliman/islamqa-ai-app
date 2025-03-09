@@ -8,12 +8,13 @@ import {
   Dimensions,
   Platform,
   Keyboard,
+  Text,
 } from 'react-native';
 import { ChatBubble } from '../components/ChatBubble';
 import { ChatInput } from '../components/ChatInput';
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
-import { Colors } from '../constants/Colors';
+import { Colors, fontSize, spacing } from '../constants/Colors';
 import { Message, Conversation } from '../types/chat';
 import { sendMessage } from '../services/api';
 import {
@@ -26,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { AdInterstitial } from '@/components/AdInterstitial';
 import { usePurchases } from '@/services/purchases';
 import LoadingComponent from '@/components/LoadingComponent';
+import Suggestions from '../components/Suggestions';
 
 const SIDEBAR_WIDTH = 350;
 const PROMPT_COUNT_TO_AD = 2;
@@ -42,6 +44,29 @@ export default function Index() {
   const flatListRef = useRef<FlatList>(null);
   const { t, i18n } = useTranslation();
   const { hasRemovedAds } = usePurchases();
+
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const slideAnim = useRef(
     new Animated.Value(
@@ -238,24 +263,29 @@ export default function Index() {
           />
         )}
 
-        <FlatList
-          ref={flatListRef}
-          data={
-            currentConversation?.messages.length
-              ? currentConversation?.messages
-              : [
-                  {
-                    id: '0',
-                    sender: 'bot',
-                    text: t('initialMessage'),
-                  } as Message,
-                ]
-          }
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <ChatBubble message={item} />}
-          contentContainerStyle={styles.chatContainer}
-          onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-        />
+        {currentConversation?.messages.length ? (
+          <FlatList
+            ref={flatListRef}
+            data={currentConversation?.messages}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <ChatBubble message={item} />}
+            contentContainerStyle={styles.chatContainer}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+          />
+        ) : (
+          <View style={styles.introContainer}>
+            {!keyboardVisible && (
+              <Text style={styles.introDescription}>
+                {t('introDescription')}
+              </Text>
+            )}
+            <Text style={styles.introTitle}>{t('introTitle')}</Text>
+            <Suggestions onSelect={handleSend} />
+            {!keyboardVisible && (
+              <Text style={styles.introDiclaimer}>{t('disclaimer')}</Text>
+            )}
+          </View>
+        )}
 
         {isLoading && <LoadingComponent />}
 
@@ -320,5 +350,33 @@ const styles = StyleSheet.create({
   chatContainer: {
     padding: 16,
     paddingBottom: 32,
+  },
+  introContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  introDescription: {
+    color: Colors.text,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    textAlign: 'center',
+    fontSize: fontSize.medium,
+    borderRadius: spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  introTitle: {
+    margin: 0,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.lg,
+    fontSize: fontSize.xxlarge,
+    fontWeight: 'bold',
+    color: Colors.primary,
+  },
+  introDiclaimer: {
+    padding: spacing.sm,
+    fontSize: fontSize.small,
+    backgroundColor: Colors.background,
   },
 });
